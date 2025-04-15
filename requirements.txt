@@ -2,5 +2,5 @@ torch
 torchvision
 numpy==1.26.4
 matplotlib==3.9.2
-pillow==10.1.0
+pillow==10.3.0
 tensorboardx==2.6.2.2
