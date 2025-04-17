@@ -1,7 +1,7 @@
 import torch.nn as nn
 # 定义CNN模型
 class LeNet5(nn.Module):
-    def __init__(self, label_num=62):  # 62 类别（0-9, A-Z, a-z）
+    def __init__(self, num_classes=62):  # 62 类别（0-9, A-Z, a-z）
         super(LeNet5, self).__init__()
         # 卷积层
         self.conv1 = nn.Sequential(
@@ -20,7 +20,7 @@ class LeNet5(nn.Module):
             nn.ReLU(),
             nn.Linear(120, 84),  # 120 → 84
             nn.ReLU(),
-            nn.Linear(84, label_num)  # 84 → label_num
+            nn.Linear(84, num_classes)  # 84 → label_num
         )
 
     def forward(self, x):
