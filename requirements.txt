@@ -1,0 +1,11 @@
+torch
+torchvision
+numpy==1.26.4
+scikit-learn==1.5.1
+tensorboardx==2.6.2.2
+tqdm==4.66.5
+ultralytics==8.3.106
+matplotlib==3.9.2
+albumentations==2.0.5
+pillow==10.3.0
+PyQt5
