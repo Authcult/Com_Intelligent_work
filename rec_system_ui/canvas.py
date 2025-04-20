@@ -65,8 +65,17 @@ class Canvas(QWidget):
         self.update()
 
     def get_image(self):
-        """获取当前画布内容的 QImage 副本"""
-        return self.image.copy()
+        """获取当前画布内容的 QImage 副本，并将其转换为黑白反转图像"""
+        image_copy = self.image.copy()
+        for y in range(image_copy.height()):
+            for x in range(image_copy.width()):
+                pixel_color = QColor(image_copy.pixel(x, y))
+                gray_value = pixel_color.red()  # 对于黑白图像，红、绿、蓝分量相同
+                inverted_gray_value = 255 - gray_value
+                inverted_color = QColor(inverted_gray_value, inverted_gray_value, inverted_gray_value)
+                image_copy.setPixel(x, y, inverted_color.rgb())
+        return image_copy
+
 
     # 推荐的初始大小
     def sizeHint(self):
