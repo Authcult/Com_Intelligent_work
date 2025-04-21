@@ -1,6 +1,10 @@
 import time
 from tqdm import tqdm
 import torch
+
+# 设置随机种子以确保结果可复现
+torch.manual_seed(42)  # 你可以选择任何你喜欢的整数作为种子
+
 def evaluate_model(model, test_loader, device, topk=(1, 3)):
     """
     Evaluate the model on the test dataset and calculate top-k accuracy and inference speed.
@@ -18,13 +22,12 @@ def evaluate_model(model, test_loader, device, topk=(1, 3)):
     correct = {k: 0 for k in topk}
     total = 0
     total_time = 0.0
-    top1_correct_test=0
-    top3_correct_test=0
+    top1_correct_test = 0
+    top3_correct_test = 0
     total_test = 0
 
-
-    with torch.no_grad() :
-        for images, labels in test_loader :
+    with torch.no_grad():
+        for images, labels in test_loader:
             images, labels = images.to(device), labels.to(device)
             start_time = time.time()
             outputs = model(images)
@@ -44,4 +47,3 @@ def evaluate_model(model, test_loader, device, topk=(1, 3)):
     inference_speed = total_time / total_test
 
     return val_top1_acc, val_top3_acc, inference_speed
-
