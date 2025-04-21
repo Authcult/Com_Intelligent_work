@@ -37,7 +37,7 @@ def load_selected_model(model_name):
             model.fc = nn.Linear(num_ftrs, NUM_CLASSES)
             print("加载 ResNet18 结构。需要您提供针对字母训练的权重。")
             # 加载权重:
-            model_path = "../myCnn/baseline_weight/resnet18_best_model.pth"
+            model_path = "../myCnn/baseline_weight/resnet18best_model2.pth"
             if os.path.exists(model_path):
                 model.load_state_dict(torch.load(model_path, map_location=DEVICE))
                 print(f"已加载 ResNet18 权重: {model_path}")
@@ -80,7 +80,7 @@ def preprocess_image(img_pil):
     class AlbumentationsTransform :
         def __init__(self) :
             self.transform = A.Compose([
-                A.Resize(32, 32),
+                A.Resize(28, 28),
                 A.Normalize(mean=(0.5,), std=(0.5,)),
                 ToTensorV2()
             ])
