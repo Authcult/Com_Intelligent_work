@@ -5,7 +5,7 @@ class LeNet5(nn.Module):
         super(LeNet5, self).__init__()
         # 卷积层
         self.conv1 = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5, stride=1, padding=0),  # 1@32×32 → 6@28×28
+            nn.Conv2d(in_channels=3, out_channels=6, kernel_size=5, stride=1, padding=0),  # 1@32×32 → 6@28×28
             nn.ReLU(),
             nn.AvgPool2d(kernel_size=2, stride=2)  # 6@28×28 → 6@14×14
         )
@@ -16,11 +16,11 @@ class LeNet5(nn.Module):
         )
         # 全连接层
         self.fc = nn.Sequential(
-            nn.Linear(16 * 5 * 5, 120),  # 16×5×5 → 120
+            nn.LazyLinear(120),
             nn.ReLU(),
-            nn.Linear(120, 84),  # 120 → 84
+            nn.Linear(120, 84),
             nn.ReLU(),
-            nn.Linear(84, num_classes)  # 84 → label_num
+            nn.Linear(84, num_classes)
         )
 
     def forward(self, x):
