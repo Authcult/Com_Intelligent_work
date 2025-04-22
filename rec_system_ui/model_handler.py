@@ -10,7 +10,6 @@ from PyQt5.QtCore import QBuffer
 from myCnn.baseline.resnet18 import resnet18
 from myCnn.baseline.mobilenet_v2 import mobilenet_v2
 from myCnn.baseline.LeNet5 import LeNet5
-from myCnn.v1.CBAMNet_Lite import CharsLightAttentionNet
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -37,7 +36,7 @@ def load_selected_model(model_name):
             model.fc = nn.Linear(num_ftrs, NUM_CLASSES)
             print("加载 ResNet18 结构。需要您提供针对字母训练的权重。")
             # 加载权重:
-            model_path = "../myCnn/baseline_weight/resnet18best_model2.pth"
+            model_path = "../myCnn/baseline_weight/best_model_resnet18.pth"
             if os.path.exists(model_path):
                 model.load_state_dict(torch.load(model_path, map_location=DEVICE))
                 print(f"已加载 ResNet18 权重: {model_path}")
@@ -47,19 +46,19 @@ def load_selected_model(model_name):
             params_key = "mobilenetv2"
             model = mobilenet_v2(pretrained=True)
             print("加载 MobileNetV2 结构。需要您提供针对字母训练的权重。")
-            model_path = "../myCnn/baseline_weight/mobilenetv2_best_model.pth"
+            model_path = "../myCnn/baseline_weight/best_model_mobilenet_v2.pth"
             if os.path.exists(model_path):
                 model.load_state_dict(torch.load(model_path, map_location=DEVICE))
                 print(f"已加载 MobileNetV2 权重: {model_path}")
 
 
-        elif model_name == CLAN:
-            params_key = "CharsLightAttentionNet"
-            model = CharsLightAttentionNet(num_classes=NUM_CLASSES)
-            # 尝试加载自定义模型的权重
-            if os.path.exists(CUSTOM_MODEL_PATH):
-                model.load_state_dict(torch.load(CUSTOM_MODEL_PATH, map_location=DEVICE))
-                print(f"成功加载自定义模型权重: {CUSTOM_MODEL_PATH}")
+        # elif model_name == CLAN:
+        #     params_key = "CharsLightAttentionNet"
+        #     model = CharsLightAttentionNet(num_classes=NUM_CLASSES)
+        #     # 尝试加载自定义模型的权重
+        #     if os.path.exists(CUSTOM_MODEL_PATH):
+        #         model.load_state_dict(torch.load(CUSTOM_MODEL_PATH, map_location=DEVICE))
+        #         print(f"成功加载自定义模型权重: {CUSTOM_MODEL_PATH}")
 
         else:
              print(f"错误：未知的模型名称 '{model_name}'")
