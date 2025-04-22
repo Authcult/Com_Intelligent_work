@@ -127,22 +127,22 @@ class AlbumentationsTransform:
             A.Rotate(limit=15, p=0.5),
             A.Affine(translate_percent=(0.1,0.1),p=0.5),
             A.RandomBrightnessContrast(p=0.3),
-            A.Normalize(mean=(0.5,),std=(0.5,)),
+            A.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
             ToTensorV2()
         ])
     def __call__(self, img):
-        img=np.array(img.convert('L'))
+        img = np.array(img.convert('RGB'))  # 与resnet18相同
         return self.transform(image=img)['image']
 
 class AlbumentationsTransformBase:
     def __init__(self):
         self.transform = A.Compose([
             A.Resize(28, 28),
-            A.Normalize(mean=(0.5,), std=(0.5,)),
+            A.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
             ToTensorV2()
         ])
     def __call__(self, img):
-        img = np.array(img.convert('L'))
+        img = np.array(img.convert('RGB'))# 与resnet18相同
         return self.transform(image=img)['image']
 
 
