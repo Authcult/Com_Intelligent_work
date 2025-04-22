@@ -21,6 +21,13 @@ def train_and_validate(model, train_loader, val_loader, epochs, device='cpu',
 
     scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=3)
 
+    # 选择一个中间层特征提取钩子
+    def hook_fn(module, input, output):
+        model.features_map = output.detach()
+
+    # 注册钩子
+    model.conv2[0].register_forward_hook(hook_fn)
+
     for epoch in range(epochs):
         model.train()
         total_loss = 0.0
@@ -92,6 +99,24 @@ def train_and_validate(model, train_loader, val_loader, epochs, device='cpu',
         writer.add_scalar("Loss/val", avg_val_loss, epoch)
         writer.add_scalar("Accuracy/val_top1", val_top1_acc, epoch)
         writer.add_scalar("Accuracy/val_top3", val_top3_acc, epoch)
+
+        # 可视化特征热力图
+        if epoch % 10 == 0:  # 每10个epoch进行一次特征图可视化
+            feature_map = model.features_map
+            # 假设特征图的大小是 [batch_size, channels, height, width]
+            feature_map = feature_map[0]  # 选择第一张图像
+            feature_map = feature_map.mean(dim=0)  # 在通道维度上求平均，生成一张2D图像
+            feature_map = feature_map.cpu().numpy()
+            # 归一化到[0, 1]
+            feature_map = (feature_map - feature_map.min()) / (feature_map.max() - feature_map.min())
+            # 可视化
+            plt.imshow(feature_map, cmap='hot', interpolation='nearest')
+            plt.colorbar()
+            plt.title(f"Feature Map Epoch {epoch}")
+            plt.savefig(f"{LOG_DIR}/feature_map_epoch_{epoch}.png")
+            plt.close()
+            # 将热力图添加到TensorBoard
+            writer.add_image(f"Feature Map/Epoch {epoch}", np.expand_dims(feature_map, axis=0), epoch)
 
         # --- 控制台输出 ---
         print(f"Epoch [{epoch+1}/{epochs}] Loss: {avg_loss:.4f}, "
