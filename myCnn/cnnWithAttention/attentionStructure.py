@@ -119,7 +119,7 @@ class CNNWithAttention(nn.Module):
     def __init__(self, num_classes, use_attention=True):
         super().__init__()
         self.conv1 = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, stride=1, padding=2),
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5, stride=1, padding=2),
             nn.BatchNorm2d(32),
             nn.LeakyReLU(),
             nn.MaxPool2d(2)
