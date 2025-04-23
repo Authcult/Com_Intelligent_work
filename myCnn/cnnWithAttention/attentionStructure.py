@@ -115,9 +115,11 @@ class InvertedResidualBlock(nn.Module):
             return out
 
 
-class CNNWithAttention(nn.Module):
-    def __init__(self, num_classes, use_attention=True):
+class CNNWithAttention(nn.Module) :
+    def __init__(self, num_classes, use_attention=True) :
         super().__init__()
+        self.use_attention = use_attention  # 添加这行保存参数
+
         self.conv1 = nn.Sequential(
             nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, stride=1, padding=1, bias=False),
             nn.BatchNorm2d(32),
@@ -131,11 +133,11 @@ class CNNWithAttention(nn.Module):
 
         self.MaxPool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
         # 插入残差和倒残差模块
-        if use_attention:
+        if use_attention :
             self.residual = ResidualBlock(64, 64, use_attention=True)
             self.inverted_residual = InvertedResidualBlock(64, 64, expansion_ratio=6, use_attention=True)
             self.attention = SelfAttention2D(64)
-        else:
+        else :
             self.residual = ResidualBlock(64, 64, use_attention=False)
             self.inverted_residual = InvertedResidualBlock(64, 64, expansion_ratio=6, use_attention=False)
             self.attention = nn.Identity()
@@ -150,13 +152,14 @@ class CNNWithAttention(nn.Module):
         )
         self.fcon2 = nn.Linear(128, num_classes)
 
-    def forward(self, x):
+    def forward(self, x) :
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.residual(x)
         # x = self.MaxPool(x)
         # x = self.inverted_residual(x)
-        x = self.attention(x)
+        if self.use_attention :  # 这里现在可以正确访问了
+            x = self.attention(x)
         x = self.fcon1(x)
         x = self.fcon2(x)
         return x
