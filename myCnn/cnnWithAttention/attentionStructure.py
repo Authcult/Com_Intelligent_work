@@ -31,12 +31,13 @@ class SimpleAttention(nn.Module):
 
 # 自注意力模块
 class SelfAttention2D(nn.Module):
-    def __init__(self, in_channels):
+    def __init__(self, in_channels, reduction=16):
         super().__init__()
-        self.query = nn.Conv2d(in_channels, in_channels // 8, kernel_size=1)
-        self.key   = nn.Conv2d(in_channels, in_channels // 8, kernel_size=1)
+        self.query = nn.Conv2d(in_channels, in_channels // reduction, kernel_size=1)
+        self.key   = nn.Conv2d(in_channels, in_channels // reduction, kernel_size=1)
         self.value = nn.Conv2d(in_channels, in_channels, kernel_size=1)
         self.gamma = nn.Parameter(torch.zeros(1))  # 可学习的缩放系数
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         B, C, H, W = x.shape
@@ -50,7 +51,7 @@ class SelfAttention2D(nn.Module):
         out = torch.bmm(proj_v, attention.permute(0, 2, 1))     # B x C x N
         out = out.view(B, C, H, W)
 
-        return self.gamma * out + x
+        return self.gamma * self.sigmoid(out) + x
 
 # 添加残差模块
 class ResidualBlock(nn.Module):
@@ -85,7 +86,7 @@ class ResidualBlock(nn.Module):
         out = self.attn(out)
         return self.relu(out + res)
 
-# 加入倒残差模块
+# 加入倒残差模块（实际没用上）
 class InvertedResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, expansion_ratio=6, stride=1, use_attention=False):
         super().__init__()
@@ -119,18 +120,17 @@ class CNNWithAttention(nn.Module):
     def __init__(self, num_classes, use_attention=True):
         super().__init__()
         self.conv1 = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5, stride=1, padding=2),
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, stride=1, padding=1, bias=False),
             nn.BatchNorm2d(32),
-            nn.LeakyReLU(),
-            nn.MaxPool2d(2)
+            nn.LeakyReLU()
         )
         self.conv2 = nn.Sequential(
-            nn.Conv2d(32, 64, kernel_size=5, stride=1, padding=2),
+            nn.Conv2d(32, 64, kernel_size=5, stride=1, padding=2, bias=False),
             nn.BatchNorm2d(64),
-            nn.LeakyReLU(),
-            nn.MaxPool2d(2)
+            nn.LeakyReLU()
         )
 
+        self.MaxPool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
         # 插入残差和倒残差模块
         if use_attention:
             self.residual = ResidualBlock(64, 64, use_attention=True)
@@ -145,15 +145,17 @@ class CNNWithAttention(nn.Module):
             nn.AdaptiveAvgPool2d(1),  # 输出形状 [B, 64, 1, 1]
             nn.Flatten(),  # 展平为 [B, 64]
             nn.Dropout(0.4),
-            nn.Linear(64, 148),  # 输入维度64
+            nn.Linear(64, 128),
+            nn.BatchNorm1d(128),
             nn.LeakyReLU(),
         )
-        self.fcon2 = nn.Linear(148, num_classes)
+        self.fcon2 = nn.Linear(128, num_classes)
 
     def forward(self, x):
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.residual(x)
+        # x = self.MaxPool(x)
         # x = self.inverted_residual(x)
         x = self.attention(x)
         x = self.fcon1(x)
