@@ -6,15 +6,13 @@ import sys
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tensorboardX import SummaryWriter
-import matplotlib.pyplot as plt
-import numpy as np
 
 
 # 训练与验证函数
 def train_and_validate(model, train_loader, val_loader, epochs, device='cpu',
                        save_path='cnn_attention_best.pth', save_best_only=True, patience=15, auto_lr = False, lr = 1e-4, LOG_DIR = f"runs/handwriting_{datetime.now().strftime('%Y%m%d_%H%M%S')}"):
     model = model.to(device)
-    optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-2)
+    optimizer = optim.Adam(model.parameters(), lr=lr)
     loss_func = nn.CrossEntropyLoss()
     writer = SummaryWriter(log_dir=LOG_DIR)
 
@@ -116,7 +114,6 @@ def train_and_validate(model, train_loader, val_loader, epochs, device='cpu',
             plt.colorbar()
             plt.title(f"Feature Map Epoch {epoch}")
             plt.savefig(f"{LOG_DIR}/feature_map_epoch_{epoch}.png")
-            plt.show()
             plt.close()
             # 将热力图添加到TensorBoard
             writer.add_image(f"Feature Map/Epoch {epoch}", np.expand_dims(feature_map, axis=0), epoch)
