@@ -6,7 +6,6 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 
 
-# 轻量CNN结构？
 class SimpleAttention(nn.Module):
     def __init__(self, channel, reduction=16):
         super().__init__()
