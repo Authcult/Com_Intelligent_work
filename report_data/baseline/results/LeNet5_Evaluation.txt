@@ -1,0 +1,4 @@
+LeNet5 Evaluation:
+Top-1 Accuracy: 87.1712
+Top-3 Accuracy: 97.6577
+Inference Speed: 0.0045 ms per sample

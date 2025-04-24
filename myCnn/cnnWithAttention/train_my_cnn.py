@@ -271,7 +271,7 @@ def train_and_validate(model, train_loader, val_loader, epochs, device='cpu',
                         train_loss, val_loss, train_top1, val_top1, train_top3, val_top3)
 
         # 特征图可视化
-        if epoch % 5 == 0 :  # 每5个epoch可视化一次
+        if epoch % 10 == 0 :  # 每5个epoch可视化一次
             fm_visualizer.visualize(epoch, log_dir)
 
         # 保存最佳模型
