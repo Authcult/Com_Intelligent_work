@@ -72,8 +72,8 @@ class Canvas(QWidget):
 
     # 推荐的初始大小
     def sizeHint(self):
-        return QSize(280, 280)
+        return QSize(56, 56)
 
     # 最小允许的大小
     def minimumSizeHint(self):
-        return QSize(150, 150)
+        return QSize(48, 48)

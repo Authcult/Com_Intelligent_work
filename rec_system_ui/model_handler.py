@@ -15,7 +15,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.models as models
 import torchvision.transforms as transforms
-
+from myCnn.cnnWithAttention.attentionStructure import CNNModel
 from config import (
     DEVICE, NUM_CLASSES, RESNET18, MOBILENETV2, CLAN,
     CUSTOM_MODEL_PATH, PREPROCESS_PARAMS, IDX_TO_CLASS
@@ -44,7 +44,7 @@ def load_selected_model(model_name):
 
         elif model_name == MOBILENETV2:
             params_key = "mobilenetv2"
-            model = mobilenet_v2(pretrained=True)
+            model = mobilenet_v2(num_classes=37)
             print("加载 MobileNetV2 结构。需要您提供针对字母训练的权重。")
             model_path = "../myCnn/baseline_weight/best_model_mobilenet_v2.pth"
             if os.path.exists(model_path):
@@ -52,13 +52,13 @@ def load_selected_model(model_name):
                 print(f"已加载 MobileNetV2 权重: {model_path}")
 
 
-        # elif model_name == CLAN:
-        #     params_key = "CharsLightAttentionNet"
-        #     model = CharsLightAttentionNet(num_classes=NUM_CLASSES)
-        #     # 尝试加载自定义模型的权重
-        #     if os.path.exists(CUSTOM_MODEL_PATH):
-        #         model.load_state_dict(torch.load(CUSTOM_MODEL_PATH, map_location=DEVICE))
-        #         print(f"成功加载自定义模型权重: {CUSTOM_MODEL_PATH}")
+        elif model_name == CLAN:
+            params_key = "CNNWithAttention"
+            model = CNNModel(num_classes=37)
+            # 尝试加载自定义模型的权重
+            if os.path.exists(CUSTOM_MODEL_PATH):
+                model.load_state_dict(torch.load(CUSTOM_MODEL_PATH, map_location=DEVICE))
+                print(f"成功加载自定义模型权重: {CUSTOM_MODEL_PATH}")
 
         else:
              print(f"错误：未知的模型名称 '{model_name}'")
@@ -118,11 +118,18 @@ def recognize_letter(model, image_qimage, params):
 
         # 检查图像是否几乎为空白 (全白或接近全白)
         # 转为灰度图检查，稍微提高阈值容忍一些噪点
+        if params["model_name"] == "CNNWithAttention":
+            # 2. 预处理图像
+            # 反转rgb颜色,保留3通道
+            pil_image = ImageOps.invert(pil_image.convert("RGB"))
+            # 保存图片到桌面
 
-        # 2. 预处理图像
-        input_tensor = preprocess_image(pil_image)
-        input_tensor = input_tensor.to(DEVICE)
 
+            input_tensor = preprocess_image(pil_image)
+            input_tensor = input_tensor.to(DEVICE)
+        else:
+            input_tensor = preprocess_image(pil_image)
+            input_tensor = input_tensor.to(DEVICE)
         # 3. 模型推理
         with torch.no_grad():
             outputs = model(input_tensor)

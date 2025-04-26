@@ -3,7 +3,7 @@ import numpy as np
 from albumentations import ToTensorV2
 import albumentations as A
 from sklearn import svm
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score ,f1_score
 from sklearn.preprocessing import StandardScaler
 from skimage.feature import hog
 from skimage import exposure
@@ -96,8 +96,13 @@ def main():
     train_acc = accuracy_score(y_train, y_train_pred) * 100
     test_acc = accuracy_score(y_test, y_test_pred) * 100
 
+    train_f1 = f1_score(y_train, y_train_pred, average='weighted')
+    test_f1 = f1_score(y_test, y_test_pred, average='weighted')
+
     print(f"训练集准确率: {train_acc:.2f}%")
     print(f"测试集准确率: {test_acc:.2f}%")
+    print(f"训练集 F1 分数: {train_f1:.4f}")
+    print(f"测试集 F1 分数: {test_f1:.4f}")
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,6 @@
+CNNWithAttention_noBoost Evaluation:
+Top-1 Accuracy: 92.1081
+Top-3 Accuracy: 98.9009
+F1 Score: 0.9205
+FPS: 232562.93720968082
+Inference Speed: 0.0049 ms per sample

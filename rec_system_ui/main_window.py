@@ -135,7 +135,7 @@ class MainWindow(QMainWindow):
         QApplication.processEvents() # 强制UI更新
 
         self.current_model, self.current_params = load_selected_model(model_name)
-
+        print("当前params："+str(self.current_params))
         if self.current_model and self.current_params:
             self.statusBar().showMessage(f"模型 '{model_name}' 加载成功 (设备: {DEVICE})。")
             self.recognize_button.setEnabled(True) # 模型加载成功后启用识别按钮

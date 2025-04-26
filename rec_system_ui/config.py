@@ -15,30 +15,33 @@ IDX_TO_CLASS =  {
 # 模型名称常量 (用于ComboBox和逻辑判断)
 RESNET18 = "ResNet18"
 MOBILENETV2 = "MobileNetV2"
-CLAN = "CharsLightAttentionNet"
+CLAN = "CNNWithAttention"
 
 # 模型列表
 MODEL_OPTIONS = [RESNET18, MOBILENETV2, CLAN]
 
 # 自定义模型权重路径 (如果存在)
-CUSTOM_MODEL_PATH = "../myCnn/v1/best_model.pth"
+CUSTOM_MODEL_PATH = "../myCnn/cnnWithAttention/cnn_res_attention_best.pth"
 
 # 预处理参数 (重要：需要根据实际训练调整！)
 # 这些是示例值，请替换为训练时使用的真实值
 PREPROCESS_PARAMS = {
     "resnet18": {
+        "model_name": RESNET18,
         "input_size": 224,
         "input_channels": 3,
         "mean": [0.5, 0.5, 0.5], # 示例值
         "std": [0.5, 0.5, 0.5]   # 示例值
     },
     "mobilenetv2": {
+        "model_name": MOBILENETV2,
         "input_size": 224,
         "input_channels": 3,
         "mean": [0.5, 0.5, 0.5], # 示例值
         "std": [0.5, 0.5, 0.5]   # 示例值
     },
-    "CharsLightAttentionNet": {
+    "CNNWithAttention": {
+        "model_name": CLAN,
         "input_size": 224,
         "input_channels": 3,
         "mean": [0.5, 0.5, 0.5], # 示例值

@@ -1,3 +1,0 @@
-Top-1 Accuracy: 87.4184
-Top-3 Accuracy: 98.3688
-Inference Speed: 0.0415 ms per sample
