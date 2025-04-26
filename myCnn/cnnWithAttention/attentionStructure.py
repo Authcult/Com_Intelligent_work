@@ -115,7 +115,7 @@ class InvertedResidualBlock(nn.Module):
             return out
 
 
-class CNNWithAttention(nn.Module) :
+class CNNModel(nn.Module) :
     def __init__(self, num_classes, use_attention=True) :
         super().__init__()
         self.use_attention = use_attention  # 添加这行保存参数
@@ -143,10 +143,10 @@ class CNNWithAttention(nn.Module) :
             self.attention = nn.Identity()
 
         self.fcon1 = nn.Sequential(
-            nn.AdaptiveAvgPool2d(1),  # 输出形状 [B, 64, 1, 1]
-            nn.Flatten(),  # 展平为 [B, 64]
+            nn.AdaptiveAvgPool2d(2),  # 输出形状 [B, 64, 2, 2]
+            nn.Flatten(),  # 展平
             nn.Dropout(0.4),
-            nn.Linear(64, 128),
+            nn.Linear(64*2*2, 128),
             nn.BatchNorm1d(128),
             nn.LeakyReLU(),
         )
@@ -156,10 +156,9 @@ class CNNWithAttention(nn.Module) :
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.residual(x)
-        # x = self.MaxPool(x)
+        x = self.MaxPool(x)
         # x = self.inverted_residual(x)
-        if self.use_attention :  # 这里现在可以正确访问了
-            x = self.attention(x)
+        x = self.attention(x)
         x = self.fcon1(x)
         x = self.fcon2(x)
         return x

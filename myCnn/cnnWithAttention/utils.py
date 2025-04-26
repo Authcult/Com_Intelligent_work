@@ -100,6 +100,10 @@ def save_emnist_images_with_class_previews(Edataset = "balanced", save_dir="emni
     print("所有图像已保存到", save_dir)
 
     if preview:
+
+        result_dir = os.path.join(os.path.dirname(save_dir), "result")
+        os.makedirs(result_dir, exist_ok=True)
+
         for label_char, imgs in class_preview_images.items():
             if len(imgs) == 0:
                 continue
@@ -108,6 +112,8 @@ def save_emnist_images_with_class_previews(Edataset = "balanced", save_dir="emni
             big_img = Image.new('L', (width, height))
             for idx, im in enumerate(imgs):
                 big_img.paste(im, (28*idx, 0))
+            preview_path = os.path.join(result_dir, f"{label_char}_preview.png")
+            big_img.save(preview_path)
             print(f"类别 {label_char} 预览图 (共 {len(imgs)} 张):")
             display(big_img)
 
@@ -124,9 +130,9 @@ class AlbumentationsTransform:
     def __init__(self):
         self.transform=A.Compose([
             A.Resize(28, 28),
-            A.Rotate(limit=15, p=0.5),
-            A.Affine(translate_percent=(0.1,0.1),p=0.5),
-            A.RandomBrightnessContrast(p=0.3),
+            A.Rotate(limit=5, p=0.3),
+            A.Affine(translate_percent=(0.05,0.05),p=0.3),
+            A.RandomBrightnessContrast(p=0.15),
             A.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
             ToTensorV2()
         ])
