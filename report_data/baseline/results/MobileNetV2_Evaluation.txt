@@ -1,4 +1,6 @@
 MobileNetV2 Evaluation:
-Top-1 Accuracy: 89.0270
-Top-3 Accuracy: 98.2883
-Inference Speed: 0.0281 ms per sample
+Top-1 Accuracy: 89.0450
+Top-3 Accuracy: 98.1261
+F1 Score: 0.8903
+FPS: 29107.15275311723
+Inference Speed: 0.0344 ms per sample

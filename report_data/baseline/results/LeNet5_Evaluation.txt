@@ -1,4 +1,6 @@
 LeNet5 Evaluation:
-Top-1 Accuracy: 87.1712
-Top-3 Accuracy: 97.6577
-Inference Speed: 0.0045 ms per sample
+Top-1 Accuracy: 86.8108
+Top-3 Accuracy: 97.2252
+F1 Score: 0.8677
+FPS: 231932.6790678211
+Inference Speed: 0.0043 ms per sample

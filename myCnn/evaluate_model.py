@@ -3,7 +3,7 @@ from tqdm import tqdm
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, f1_score, precision_score, recall_score
 # 显示中文字体
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
@@ -13,7 +13,7 @@ torch.manual_seed(42)  # 你可以选择任何你喜欢的整数作为种子
 
 def evaluate_model(model, test_loader, device, topk=(1, 3)):
     """
-    在测试数据集上评估模型，并计算 top-k 准确率和推理速度。
+    在测试数据集上评估模型，并计算 top-k 准确率、F1分数、精确率、召回率和推理速度。
 
     参数:
         model (torch.nn.Module): 训练好的模型。
@@ -22,7 +22,7 @@ def evaluate_model(model, test_loader, device, topk=(1, 3)):
         topk (tuple): 表示要计算的 top-k 准确率的整数元组。
 
     返回:
-        tuple: 包含 top-1 准确率、top-3 准确率和每个样本的推理速度（秒）的元组。
+        tuple: 包含 top-1 准确率、top-3 准确率、F1分数、精确率、召回率和每个样本的推理速度（秒）的元组。
     """
     model.eval()
     correct = {k: 0 for k in topk}
@@ -55,10 +55,15 @@ def evaluate_model(model, test_loader, device, topk=(1, 3)):
 
     val_top1_acc = 100 * top1_correct_test / total_test
     val_top3_acc = 100 * top3_correct_test / total_test
-    inference_speed = total_time / total_test
+    inference_speed =  total_time /total_test
 
     # 计算混淆矩阵
     cm = confusion_matrix(all_labels, all_preds)
+
+    # 计算F1分数、精确率和召回率
+    f1 = f1_score(all_labels, all_preds, average='weighted')
+    precision = precision_score(all_labels, all_preds, average='weighted')
+    recall = recall_score(all_labels, all_preds, average='weighted')
 
     # 获取类别信息
     if isinstance(test_loader.dataset, torch.utils.data.Subset):
@@ -69,7 +74,7 @@ def evaluate_model(model, test_loader, device, topk=(1, 3)):
     # 绘制混淆矩阵
     plot_confusion_matrix(cm, classes)
 
-    return val_top1_acc, val_top3_acc, inference_speed
+    return val_top1_acc, val_top3_acc, f1, precision, recall, inference_speed
 
 def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
     if normalize:

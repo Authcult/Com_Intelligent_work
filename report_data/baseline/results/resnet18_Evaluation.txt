@@ -1,4 +1,6 @@
 ResNet18 Evaluation:
-Top-1 Accuracy: 90.4324
+Top-1 Accuracy: 90.3423
 Top-3 Accuracy: 98.7387
-Inference Speed: 0.0182 ms per sample
+F1 Score: 0.9034
+FPS: 21463.87420265588
+Inference Speed: 0.0466 ms per sample

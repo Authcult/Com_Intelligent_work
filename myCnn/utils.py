@@ -48,9 +48,9 @@ def split_dataset(root_dir, transform, train_ratio=0.7, val_ratio=0.15, test_rat
     return train_loader, val_loader, test_loader, full_dataset
 
 # 绘制图像对比top1、top3准确率、推理速度、模型大小
-def plot_comparison(model_names, top1_accs, top3_accs, inference_speeds, model_sizes):
+def plot_comparison(model_names, top1_accs, top3_accs, inference_speeds, model_sizes, f1_scores, fps_values):
     """
-    绘制图像对比top1、top3准确率、推理速度、模型大小，并标注具体数值
+    绘制图像对比top1、top3准确率、推理速度、模型大小、F1分数和FPS，并标注具体数值
 
     参数:
     model_names (list): 模型名称列表
@@ -58,9 +58,11 @@ def plot_comparison(model_names, top1_accs, top3_accs, inference_speeds, model_s
     top3_accs (list): Top-3 准确率列表
     inference_speeds (list): 推理速度列表
     model_sizes (list): 模型大小列表
+    f1_scores (list): F1 分数列表
+    fps_values (list): FPS 值列表
     """
-    # 创建一个包含4个子图的图形
-    fig, axs = plt.subplots(2, 2, figsize=(14, 10))
+    # 创建一个包含6个子图的图形 (3x2)
+    fig, axs = plt.subplots(3, 2, figsize=(14, 15))
 
     # 定义一个辅助函数用于添加数值标签
     def add_labels(ax, data):
@@ -100,6 +102,22 @@ def plot_comparison(model_names, top1_accs, top3_accs, inference_speeds, model_s
     axs[1, 1].set_xlabel('模型名称')
     axs[1, 1].tick_params(axis='x', rotation=45)
     add_labels(axs[1, 1], model_sizes)
+
+    # 绘制F1分数
+    axs[2, 0].bar(model_names, f1_scores, color='mediumpurple')
+    axs[2, 0].set_title('F1 分数')
+    axs[2, 0].set_ylabel('F1 分数')
+    axs[2, 0].set_xlabel('模型名称')
+    axs[2, 0].tick_params(axis='x', rotation=45)
+    add_labels(axs[2, 0], f1_scores)
+
+    # 绘制FPS
+    axs[2, 1].bar(model_names, fps_values, color='orange')
+    axs[2, 1].set_title('FPS')
+    axs[2, 1].set_ylabel('帧率 (FPS)')
+    axs[2, 1].set_xlabel('模型名称')
+    axs[2, 1].tick_params(axis='x', rotation=45)
+    add_labels(axs[2, 1], fps_values)
 
     # 调整子图之间的间距
     plt.tight_layout()
