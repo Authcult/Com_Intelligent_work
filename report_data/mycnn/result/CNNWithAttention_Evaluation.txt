@@ -1,6 +1,7 @@
 CNNWithAttention Evaluation:
-Top-1 Accuracy: 92.0541
-Top-3 Accuracy: 99.1351
-F1 Score: 0.9204
-FPS: 183132.88438542388
-Inference Speed: 0.0055 ms per sample
+Top-1 Accuracy: 92.8649
+Top-3 Accuracy: 99.2613
+F1 Score: 0.9281
+Precision: 0.9292
+Recall: 0.9286
+Inference Speed: 0.0043 ms per sample
