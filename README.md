@@ -6,8 +6,7 @@
 
 ## 数据集
 
-本项目使用 EMNIST (Extended MNIST) 数据集的 balanced 子集进行训练和测试。该数据集包含各种手写英文字母和数字，为模型提供了丰富的训练样本。
-
+本项目使用 EMNIST (Extended MNIST) 数据集的 balanced 子集进行训练和测试，项目选取了除数字外的37种手写字母。
 1. [The EMNIST Dataset](https://www.nist.gov/itl/products-and-services/emnist-dataset)
 
 ## 系统功能
