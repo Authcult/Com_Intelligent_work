@@ -2,6 +2,13 @@ from torchvision.datasets import EMNIST
 from PIL import Image
 import os
 from IPython.display import display
+import torch
+import numpy as np
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
+from torchvision import datasets
+from torch.utils.data import DataLoader, Subset
+from collections import Counter
 
 def save_emnist_images_with_class_previews(Edataset = "balanced", save_dir="emnist_png_balanced", max_images_per_class=1000, preview=True, preview_limit_per_class=10):
     digits = [str(i) for i in range(10)]
@@ -117,14 +124,6 @@ def save_emnist_images_with_class_previews(Edataset = "balanced", save_dir="emni
             print(f"类别 {label_char} 预览图 (共 {len(imgs)} 张):")
             display(big_img)
 
-import torch
-import numpy as np
-import albumentations as A
-from albumentations.pytorch import ToTensorV2
-from torchvision import datasets
-from torch.utils.data import DataLoader, Subset
-from collections import Counter
-
 
 class AlbumentationsTransform:
     def __init__(self):
@@ -166,12 +165,6 @@ def split_dataset(root_dir, transform, train_ratio=0.7, val_ratio=0.15, test_rat
     - batch_size: 批次大小
     - shuffle: 是否打乱数据
     - random_seed: 随机种子，用于保证结果可重复
-
-    返回:
-    - train_loader: 训练集DataLoader
-    - val_loader: 验证集DataLoader
-    - test_loader: 测试集DataLoader
-    - full_dataset: 原始的ImageFolder数据集
     """
     # 确保比例之和为1
     assert train_ratio + val_ratio + test_ratio == 1, "比例之和必须为1"

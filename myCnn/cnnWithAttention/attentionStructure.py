@@ -9,9 +9,7 @@ from torch.utils.data import DataLoader
 class SimpleAttention(nn.Module):
     def __init__(self, channel, reduction=16):
         super().__init__()
-        # Squeeze操作：全局平均池化
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        # Excitation操作：两个全连接层
         self.fc = nn.Sequential(
             nn.Linear(channel, channel // reduction, bias=False),
             nn.ReLU(inplace=True),

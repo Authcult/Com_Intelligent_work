@@ -18,12 +18,6 @@ def split_dataset(root_dir, transform, train_ratio=0.7, val_ratio=0.15, test_rat
     - batch_size: 批次大小
     - shuffle: 是否打乱数据
     - random_seed: 随机种子，用于保证结果可重复
-
-    返回:
-    - train_loader: 训练集DataLoader
-    - val_loader: 验证集DataLoader
-    - test_loader: 测试集DataLoader
-    - full_dataset: 原始的ImageFolder数据集
     """
     # 确保比例之和为1
     assert train_ratio + val_ratio + test_ratio == 1, "比例之和必须为1"

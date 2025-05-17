@@ -9,7 +9,7 @@ plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
 
 # 设置随机种子以确保结果可复现
-torch.manual_seed(42)  # 你可以选择任何你喜欢的整数作为种子
+torch.manual_seed(42)
 
 def evaluate_model(model, test_loader, device, topk=(1, 3)):
     """
@@ -21,8 +21,6 @@ def evaluate_model(model, test_loader, device, topk=(1, 3)):
         device (torch.device): 运行模型的设备（CPU 或 GPU）。
         topk (tuple): 表示要计算的 top-k 准确率的整数元组。
 
-    返回:
-        tuple: 包含 top-1 准确率、top-3 准确率、F1分数、精确率、召回率和每个样本的推理速度（秒）的元组。
     """
     model.eval()
     correct = {k: 0 for k in topk}

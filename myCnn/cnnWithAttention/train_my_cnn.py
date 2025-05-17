@@ -90,9 +90,6 @@ def update_plot(fig, axes, lines, metrics, epoch,
 
 
 
-
-
-
 def save_plot(fig, save_dir="training_plots") :
     """保存最终图表"""
     display(fig)
@@ -115,7 +112,6 @@ class FeatureMapVisualizer :
 
     def setup_hook(self, layer_name=None) :
         """自动或手动设置特征图钩子"""
-        # 查找目标层
         target_layer = None
         for name, module in self.model.named_modules() :
             if isinstance(module, nn.Conv2d) :

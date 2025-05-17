@@ -14,7 +14,6 @@ def setup_plotting() :
     返回图形对象、坐标轴对象、线条对象（用于更新数据）
     以及存储指标历史的列表
     """
-    # 使用非交互模式以适应Jupyter环境
     plt.ioff()
 
     # 创建包含3个子图的图形
@@ -91,7 +90,6 @@ def finalize_plotting(fig) :
     """
     训练完成后显示并保存最终图表
     """
-    # 在Jupyter Notebook中显示图表
     plt.show()
 
     # 保存图表到文件
@@ -104,7 +102,6 @@ def finalize_plotting(fig) :
     print(f"Saved final training metrics plot to {plot_save_path}")
 
     plt.close(fig)
-
 
 # --- 主训练函数 ---
 
